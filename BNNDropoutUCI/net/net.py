@@ -63,7 +63,6 @@ class Net(nn.Module):
 
 
 
-# Define New Loss Function -- SGVLB
 class Learner(nn.Module):
     def __init__(self, net, num_samples):
         super(Learner, self).__init__()
