@@ -122,7 +122,7 @@ class Linear(nn.Module):
             kl = torch.log((torch.sum(self.U, dim=-1) ** 2 + torch.sum(alpha * self.U**2, dim=-1)) / alpha.unsqueeze(0).expand(M, K))
             kl = torch.sum(kl, dim=-1)
             kl = kl * self.out_features
-            return kl.sum() / 2
+            return kl.mean() / 2
 
 # Define a simple 4 layer Network
 class NetFC(nn.Module):
