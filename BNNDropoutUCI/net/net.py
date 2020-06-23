@@ -17,7 +17,7 @@ sys.path.append('./')
 from model import *
 import time
 
-dev = 'cpu' if torch.cuda.is_available() else 'cpu'
+dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 
 class Net(nn.Module):
