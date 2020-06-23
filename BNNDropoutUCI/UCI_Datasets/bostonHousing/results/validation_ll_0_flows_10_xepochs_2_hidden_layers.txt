@@ -1,0 +1,3 @@
+Dropout_Rate: 0.005 :: -5.5685596
+Dropout_Rate: 0.01 :: -5.0036945
+Dropout_Rate: 0.05 :: -4.888844

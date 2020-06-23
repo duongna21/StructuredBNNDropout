@@ -1,1 +1,2 @@
-# StructuredBNNDropout
+# BNNDropout
+# BNNDropout

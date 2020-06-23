@@ -1,0 +1,3 @@
+Dropout_Rate: 0.005 :: tensor(14.0218)
+Dropout_Rate: 0.01 :: tensor(13.9362)
+Dropout_Rate: 0.05 :: tensor(13.8792)
