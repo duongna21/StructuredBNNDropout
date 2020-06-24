@@ -94,11 +94,11 @@ for epoch in range(1, epochs + 1):
     print(epoch, 'train_acc', train_acc / len(train_loader.dataset) * 100)
 
     if dataset == 'cifar':
-        torch.save('/home/ubuntu/cifar.pth')
+        torch.save(model, '/home/ubuntu/cifar.pth')
     if dataset == 'svhn':
-        torch.save('/home/ubuntu/svhn.pth')
+        torch.save(model, '/home/ubuntu/svhn.pth')
     if dataset == 'mnist':
-        torch.save('/home/ubuntu/mnist.pth')
+        torch.save(model, '/home/ubuntu/mnist.pth')
 
     model.eval()
     test_loss, test_elbo, test_acc = 0, 0, 0
@@ -125,6 +125,3 @@ for epoch in range(1, epochs + 1):
         del loss, elbo
 
     print(epoch, 'test_acc', test_acc / len(test_loader.dataset) * 100, '\n')
-
-
-
