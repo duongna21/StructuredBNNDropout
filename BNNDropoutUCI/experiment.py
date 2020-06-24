@@ -30,7 +30,7 @@ epochs_multiplier = args.epochx
 num_hidden_layers = args.hidden
 num_flows = args.num_flows
 
-sys.path.append('./BNNDropoutUCI/net/')
+sys.path.append('/vinai/khoattq/StructuredBNNDropout/BNNDropoutUCI/net/')
 import net
 # import net.HHDropout
 
@@ -38,7 +38,7 @@ import net
 
 from subprocess import call
 
-base_dir = './BNNDropoutUCI/'
+base_dir = '/home/ubuntu/data/'
 
 _RESULTS_VALIDATION_LL = base_dir + "UCI_Datasets/" + data_directory + "/results/validation_ll_" + str(num_flows) + "_flows_" + str(
     epochs_multiplier) + "_xepochs_" + str(num_hidden_layers) + "_hidden_layers.txt"
