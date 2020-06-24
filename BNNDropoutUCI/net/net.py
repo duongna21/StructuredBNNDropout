@@ -7,6 +7,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 from scipy.special import logsumexp
+
 import torch
 torch.manual_seed(0)
 import numpy as np
@@ -15,17 +16,19 @@ from torch.utils.data import DataLoader, TensorDataset
 import sys
 sys.path.append('/vinai/khoattq/StructuredBNNDropout/')
 from model import *
+
+
 import time
 
 dev = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-
 class Net(nn.Module):
-    def __init__(self, input_shape, num_flows=2, p=0.1):
+    def __init__(self, input_shape, num_flows=2, p=0.1, kl_weight=1):
         super(Net, self).__init__()
         self.num_flows = num_flows
+        self.kl_weight = kl_weight
         hidden_size = 50
-        self.fc1 = Linear(input_shape, hidden_size, alpha=p/(1 - p),  num_flows=num_flows)
+        self.fc1 = Linear(input_shape, hidden_size, alpha=p/(1 - p), num_flows=num_flows)
         self.fc2 = Linear(hidden_size, 1, alpha=p/(1 - p), num_flows=num_flows)
 
     def forward(self, x):
@@ -38,7 +41,6 @@ class Net(nn.Module):
         train_dataset = TensorDataset(torch.Tensor(X_train), torch.Tensor(y_train_normalized))
         train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 
-        kl_weight = 1
         for t in range(n_epochs):
             train_loss = 0.
             for i, (data, target) in enumerate(train_loader):
@@ -47,7 +49,7 @@ class Net(nn.Module):
                 optimizer.zero_grad()
                 # print('train: ', data.shape, data[0], data.mean(), data.std())
                 prediction = self(data.to(dev))
-                loss, _ = learner(prediction, target, kl_weight)
+                loss, _ = learner(prediction, target, self.kl_weight)
                 loss.backward()
                 optimizer.step()
 
@@ -61,8 +63,7 @@ class Net(nn.Module):
         y_preds = self(X_test.cpu())
         return y_preds.cpu().detach().numpy()
 
-
-
+# Define New Loss Function -- Learner
 class Learner(nn.Module):
     def __init__(self, net, num_samples):
         super(Learner, self).__init__()
@@ -75,10 +76,10 @@ class Learner(nn.Module):
         for module in self.net.children():
             if hasattr(module, 'kl_reg'):
                 kl = kl + module.kl_reg()
-        kl = kl / self.num_samples
+        # kl = kl / self.num_samples
         # print('kl: ', kl)
         mse = F.mse_loss(input, target.to(dev))
-        # print(mse, kl_weight)
+        # print(mse.item(), kl.item())
         elbo = - mse - kl
         return mse + kl_weight * kl, elbo
 
@@ -86,7 +87,7 @@ class Learner(nn.Module):
 class net:
 
     def __init__(self, X_train, y_train, input_shape, n_epochs=400,
-                 normalize=False, num_flows=2, tau=1.0, dropout=0.1):
+                 normalize=False, num_flows=2, tau=1.0, dropout=0.1, kl_weight=1):
 
         """
             Constructor for the class implementing a Bayesian neural network
@@ -133,7 +134,7 @@ class net:
         # We construct the network
         batch_size = 128
 
-        model = Net(input_shape=input_shape, p=dropout, num_flows=num_flows).to(dev)
+        model = Net(input_shape=input_shape, p=dropout, num_flows=num_flows, kl_weight=kl_weight).to(dev)
         optimizer = optim.Adam(model.parameters(), lr=1e-3)
         learner = Learner(model, len(X_train))  # len(train_loader.dataset)
 
