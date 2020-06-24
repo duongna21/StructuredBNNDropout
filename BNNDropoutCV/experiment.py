@@ -1,5 +1,5 @@
 import sys
-sys.path.append('./')
+sys.path.append('/vinai/khoattq/StructuredBNNDropout/')
 from model import *
 from BNNDropoutCV.data import *
 import argparse
