@@ -13,7 +13,7 @@ import numpy as np
 import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 import sys
-sys.path.append('./')
+sys.path.append('/vinai/khoattq/StructuredBNNDropout/')
 from model import *
 import time
 
