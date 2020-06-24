@@ -14,7 +14,7 @@ parser.add_argument('--p', type=float, default=0.5)
 parser.add_argument('--num_flows', '-n', type=int, default=2)
 parser.add_argument('--bs', '-b', type=int, default=32)
 parser.add_argument('--klw', '-k', type=float, default=0.1)
-parser.add_argument('--MC', '-k', type=int, default=10)
+parser.add_argument('--MC', '-m', type=int, default=10)
 parser.add_argument('--load', '-l', type=bool, default=False)
 
 args = parser.parse_args()
